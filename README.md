@@ -10,7 +10,7 @@ El objetivo es permitir crear, leer, actualizar, eliminar y filtrar destinos des
 ### Backend (.NET 8)
 
 - **ASP.NET Core Web API**
-- **Entity Framework Core** con **InMemory Database** (mock de datos)
+- **Entity Framework Core** con **SQLite** (base de datos autocontenida)
 - **Swagger / OpenAPI** para documentación interactiva
 - **CORS habilitado** para permitir conexión con el frontend
 
@@ -20,7 +20,7 @@ El objetivo es permitir crear, leer, actualizar, eliminar y filtrar destinos des
 - **@tanstack/react-query** para manejo de consultas asíncronas y caché
 - **Axios** para las llamadas HTTP
 - **React Window** para renderizar grandes volúmenes de datos (200.000+ registros)
-- **Tailwind CSS** para diseño rápido y responsivo
+- **MaterialUI** para diseño rápido y responsivo
 
 ---
 
@@ -40,43 +40,25 @@ El objetivo es permitir crear, leer, actualizar, eliminar y filtrar destinos des
 
 ### Backend (`HotelBediaX.Api`)
 
-HotelBediaX.Api/
-├── Controllers/
-│ └── DestinationsController.cs # Endpoints CRUD principales
-├── Data/
-│ ├── AppDbContext.cs # Contexto de Entity Framework
-│ └── Seeder.cs # Generador de datos falsos (200k)
-├── Models/
-│ └── Destination.cs # Modelo base de destino
-├── Program.cs # Configuración de la app
-└── HotelBediaX.Api.csproj
+hotel-bediax/backend/HotelBediaX.Api/
 
 ### Frontend (`hotel-bediax-ui`)
 
-hotel-bediax-ui/
-├── src/
-│ ├── api/
-│ │ └── destinations.js # Llamadas HTTP al backend
-│ ├── components/
-│ │ └── DestinationsList.jsx # Tabla de destinos
-│ │ └── DestinationForm.jsx # Crear/modificar destino
-│ ├── App.jsx # Layout principal (sidebar + contenido)
-│ ├── main.jsx # Punto de entrada (React Query + Router)
-│ └── index.css # Estilos globales
-├── public/
-├── package.json
-├── vite.config.js
-└── .env
+hotel-bediax/frontend/hotel-bediax-ui/
 
 ## Cómo ejecutar
 
 ### 1\_ Backend (.NET)
 
-cd HotelBediaX.Api
-dotnet run
+cd ./hotel-bediax/backend/HotelBediaX.Api
+dotnet restore ./HotelBediaX.Api.csproj
+dotnet build ./HotelBediaX.Api.csproj
+dotnet run --project HotelBediaX.Api.csproj
 
-### 2\_ Backend (.NET)
+### 2\_ Frontend (React)
 
-cd hotel-bediax-ui
-npm install
+cd ./hotel-bediax/frontend/hotel-bediax-ui
+npm install --legacy-peer-deps
 npm run dev
+
+### La app se estara corriendo en http://localhost:5173/

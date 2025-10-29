@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HotelBediaX.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9b8fcf594401c76ab5202b925ac934ba518bfe9c")]
 [assembly: System.Reflection.AssemblyProductAttribute("HotelBediaX.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HotelBediaX.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

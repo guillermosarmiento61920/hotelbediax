@@ -18,17 +18,27 @@ namespace HotelBediaX.Api.Controllers
         // GET: api/destinations?pageNumber=1&pageSize=50...
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 50, [FromQuery] string? search = null, [FromQuery] string? sort = null)
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10,
+            [FromQuery] string? search = null, [FromQuery] string? name = null, [FromQuery] string? city = null,
+            [FromQuery] string? country = null, [FromQuery] decimal? minPrice = null, [FromQuery] decimal? maxPrice = null,
+            [FromQuery] string? type = null, [FromQuery] string? sort = null)
         {
             if (page <= 0) page = 1;
-            if (pageSize <= 0 || pageSize > 1000) pageSize = 50;
+            if (pageSize <= 0 || pageSize > 1000) pageSize = 10;
 
             var query = _db.Destinations.AsQueryable();
             if (!string.IsNullOrWhiteSpace(search))
             {
-                search = search.ToLower();
-                query = query.Where(d => d.Name.ToLower().Contains(search) || d.Country.ToLower().Contains(search) || d.City.ToLower().Contains(search));
+                var s = search.ToLower();
+                query = query.Where(d => d.Name.ToLower().Contains(s) || d.Country.ToLower().Contains(s) || d.City.ToLower().Contains(s));
             }
+
+            if (!string.IsNullOrWhiteSpace(name)) query = query.Where(d => d.Name.Contains(name));
+            if (!string.IsNullOrWhiteSpace(city)) query = query.Where(d => d.City == city);
+            if (!string.IsNullOrWhiteSpace(country)) query = query.Where(d => d.Country == country);
+            if (minPrice.HasValue) query = query.Where(d => d.PricePerNight >= minPrice.Value);
+            if (maxPrice.HasValue) query = query.Where(d => d.PricePerNight <= maxPrice.Value);
+            if (!string.IsNullOrWhiteSpace(type)) query = query.Where(d => d.Type == type);
 
             //sorting
             query = sort switch
@@ -63,6 +73,7 @@ namespace HotelBediaX.Api.Controllers
         {
             dto.Id = Guid.NewGuid();
             dto.CreatedAt = DateTime.UtcNow;
+            dto.LastModified = DateTime.UtcNow;
             _db.Destinations.Add(dto);
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
@@ -79,6 +90,8 @@ namespace HotelBediaX.Api.Controllers
             existing.City = dto.City;
             existing.Description = dto.Description;
             existing.PricePerNight = dto.PricePerNight;
+            existing.Type = dto.Type;
+            existing.LastModified = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
             return NoContent();
@@ -93,6 +106,35 @@ namespace HotelBediaX.Api.Controllers
             _db.Destinations.Remove(existing);
             await _db.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpGet("cities")]
+        public async Task<IActionResult> GetCities()
+        {
+            var cities = await _db.Destinations
+            .Select(d => d.City)
+            .Distinct()
+            .OrderBy(c => c)
+            .ToListAsync();
+            return Ok(cities);
+        }
+
+        [HttpGet("countries")]
+        public async Task<IActionResult> GetCountries()
+        {
+            var countries = await _db.Destinations
+                .Select(d => d.Country)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+            return Ok(countries);
+        }
+
+        [HttpGet("types")]
+        public async Task<IActionResult> GetTypes()
+        {
+            var types = await _db.Destinations.Select(d => d.Type).Distinct().OrderBy(t => t).ToListAsync();
+            return Ok(types);
         }
     }
 }

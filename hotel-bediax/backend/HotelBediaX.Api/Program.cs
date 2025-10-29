@@ -1,17 +1,24 @@
 // Program.cs configura los servicios, CORS, Swagger Db y arranca el servidor.
-// Configuración inicial de la API y registro de dependencias
+// Configuracion inicial de la API y registro de dependencias
 
 using HotelBediaX.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelBediaX API", Version = "v1" });
+});
 
+// para usar SQLite
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                       ?? "Data Source=hotelbediax.db";
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseInMemoryDatabase("HotelBediaXDb"));
+    options.UseSqlite(connectionString));
 
 // Cors
 builder.Services.AddCors(options =>
@@ -36,6 +43,8 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+    // si no hay datos, seedear
     Seeder.Seed(db, 200000);
 }
 
