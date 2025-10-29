@@ -1,4 +1,4 @@
-// Search panel component with filters for destinations
+// panel de busqueda
 import React, { useState, useEffect } from "react";
 import {
   Box,

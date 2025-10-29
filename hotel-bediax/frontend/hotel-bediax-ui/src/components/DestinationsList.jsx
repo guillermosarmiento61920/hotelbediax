@@ -28,12 +28,6 @@ export default function DestinationsList() {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState(null);
 
-  //   const { data, isLoading, refetch } = useQuery(
-  //     ["destinations", page, pageSize, search],
-  //     () => fetchDestinations({ page, pageSize, search }),
-  //     { keepPreviousData: true }
-  //   );
-
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["destinations"],
     queryFn: fetchDestinations,

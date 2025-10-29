@@ -1,4 +1,4 @@
-// Table component using Material UI DataGrid with inline editing
+// tabla contenedora de datos
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button, IconButton, CircularProgress } from "@mui/material";
